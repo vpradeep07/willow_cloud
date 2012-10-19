@@ -9,8 +9,7 @@ import time
 
 from rospkg import environment
 
-def init_jenkins_cache(jenkins_instance, cache_dir_orig):
-    cache_dir = os.path.expanduser(cache_dir_orig)
+def init_jenkins_cache(jenkins_instance, cache_dir):
     os.makedirs(cache_dir)
     job_info_dir = cache_dir + '/job_info'
     os.mkdir(job_info_dir)
@@ -36,7 +35,8 @@ def main():
         print "Usage: %s cache_dir"%(sys.argv[0])
         sys.exit(0)
 
-    cache_dir = sys.argv[1]
+    cache_dir_orig = sys.argv[1]
+    cache_dir = os.path.expanduser(cache_dir_orig)
 
     # create jenkins instance
     with open(os.path.join(environment.get_ros_home(), 'catkin-debs', 'server.yaml')) as f:
