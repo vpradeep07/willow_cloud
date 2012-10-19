@@ -11,7 +11,10 @@ def _count_deps(jenkins_instance, cache_dir, base_job_info, active_test, counted
         return
 
     print "%s%s - Count=%i" % ("-"*depth, base_job_info['name'], len(counted_deps))
-    counted_deps.add(base_job_info['name'])
+
+    name = base_job_info['name']
+    # Store the current depth if it's bigger
+    counted_deps[name] = max( counted_deps.get(name, depth), depth)
 
     # Walk over downstream jobs
     for downstream_job in base_job_info['downstreamProjects']:
@@ -23,7 +26,7 @@ def _count_deps(jenkins_instance, cache_dir, base_job_info, active_test, counted
             _count_deps(jenkins_instance, cache_dir, downstream_job_info, active_test, counted_deps, depth+1)
 
 def count_deps(jenkins_instance, cache_dir, base_jobs, active_test=default_active_test):
-    counted_deps = set()
+    counted_deps = dict()
 
     for base_job in base_jobs:
         if base_job not in counted_deps:
@@ -31,4 +34,4 @@ def count_deps(jenkins_instance, cache_dir, base_jobs, active_test=default_activ
             base_job_info = yaml.load(f).values()[0];
             f.close()
             _count_deps(jenkins_instance, cache_dir, base_job_info, active_test, counted_deps, 0)
-    return len(counted_deps)
+    return len(counted_deps), counted_deps

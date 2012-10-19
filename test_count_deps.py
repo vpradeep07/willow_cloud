@@ -30,11 +30,25 @@ def main():
     jenkins_instance = jenkins.Jenkins(jenkins_url, info['username'], info['password'])
     print "Created Jenkins instance"
 
-    num_deps = count_deps.count_deps(jenkins_instance, cache_dir, job_list)
+    num_deps, deps = count_deps.count_deps(jenkins_instance, cache_dir, job_list)
+
+    depth_counts = {}
+
+    for depth in deps.values():
+        depth_counts[depth] = depth_counts.get(depth, 0) + 1
+
+    max_depth = max(depth_counts.keys())
+
+    for depth in range(max_depth):
+        depth_counts[depth] = depth_counts.get(depth, 0)
 
     print "Calculated deps for:"
     print "".join([ "%s\n" % x for x in job_list ])
     print "Found %i total deps" % num_deps
+
+    print "Depth Counts:"
+    for depth, count in depth_counts.items():
+        print "%i) %i" % (depth, count)
 
 if __name__ == "__main__":
     main()
