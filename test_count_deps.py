@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import jenkins
+import jenkins_cache
 import urllib
 import yaml
 import sys
@@ -27,10 +27,10 @@ def main():
 
     #jenkins_url = 'http://jenkins.willowgarage.com:8080/'
     jenkins_url = 'http://50.28.61.61:8080/'
-    jenkins_instance = jenkins.Jenkins(jenkins_url, info['username'], info['password'])
-    print "Created Jenkins instance"
+    cache = jenkins_cache.JenkinsCache(jenkins_url, cache_dir, info['username'], info['password'])
+    print "Created Jenkins cache instance"
 
-    num_deps, deps = count_deps.count_deps(jenkins_instance, cache_dir, job_list)
+    num_deps, deps = count_deps.count_deps(cache, job_list)
 
     depth_counts = {}
 
