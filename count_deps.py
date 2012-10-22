@@ -23,6 +23,9 @@ def _count_deps(cache, base_job_info, active_test, counted_deps, depth):
             downstream_job_info = cache.get_job_info(downstream_job['name'])
             _count_deps(cache, downstream_job_info, active_test, counted_deps, depth+1)
 
+'''
+Count the number of dependencies for a given set of jobs.  Also provides the depth of each dependency
+'''
 def count_deps(cache, base_jobs, active_test=default_active_test):
     counted_deps = dict()
 
